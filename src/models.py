@@ -11,7 +11,6 @@ class Follower(Base):
     user_from_id = Column(Integer, ForeignKey('user.id'), primary_key=True)
     user_to_id = Column(Integer, ForeignKey('user.id'), primary_key=True)
 
-    # Relación bidireccional con User
     user_from = relationship('User', foreign_keys=[user_from_id])
     user_to = relationship('User', foreign_keys=[user_to_id])
 
@@ -47,8 +46,9 @@ class Post(Base):
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
 
     
-    user = relationship('User', back_populates='posts')
+    user = relationship('User')
     comments = relationship('Comment')
+    media = relationship('Media')
 
 
 class Media(Base):
