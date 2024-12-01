@@ -11,8 +11,8 @@ class Follower(Base):
     user_from_id = Column(Integer, ForeignKey('user.id'), primary_key=True)
     user_to_id = Column(Integer, ForeignKey('user.id'), primary_key=True)
 
-    user_from = relationship('User', foreign_keys=[user_from_id])
-    user_to = relationship('User', foreign_keys=[user_to_id])
+    user_from = relationship('User')
+    user_to = relationship('User')
 
 
 class User(Base):
@@ -25,8 +25,8 @@ class User(Base):
 
     posts = relationship('Post')
     comments = relationship('Comment')
-    followers = relationship('Follower', foreign_keys=[Follower.user_to_id])
-    following = relationship('Follower', foreign_keys=[Follower.user_from_id])
+    followers = relationship('Follower')
+    following = relationship('Follower')
 
 
 class Comment(Base):
