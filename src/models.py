@@ -11,8 +11,10 @@ class Follower(Base):
     user_from_id = Column(Integer, ForeignKey('user.id'), primary_key=True)
     user_to_id = Column(Integer, ForeignKey('user.id'), primary_key=True)
 
-    user_from = relationship('User', foreign_keys=[user_from_id], back_populates='following')
-    user_to = relationship('User', foreign_keys=[user_to_id], back_populates='followers')
+    # Relación bidireccional con User
+    user_from = relationship('User', foreign_keys=[user_from_id])
+    user_to = relationship('User', foreign_keys=[user_to_id])
+
 
 class User(Base):
     __tablename__ = 'user'
@@ -22,10 +24,10 @@ class User(Base):
     lastname = Column(String(50), nullable=False)
     email = Column(String(50), nullable=False, unique=True)
 
-    posts = relationship('Post', back_populates='user')
-    comments = relationship('Comment', back_populates='author')
-    followers = relationship('Follower', foreign_keys=[Follower.user_to_id], back_populates='user_to' )
-    following = relationship('Follower', foreign_keys=[Follower.user_from_id], back_populates='user_from')
+    posts = relationship('Post')
+    comments = relationship('Comment')
+    followers = relationship('Follower', foreign_keys=[Follower.user_to_id])
+    following = relationship('Follower', foreign_keys=[Follower.user_from_id])
 
 
 class Comment(Base):
@@ -35,20 +37,18 @@ class Comment(Base):
     author_id = Column(Integer, ForeignKey('user.id'), nullable=False)
     post_id = Column(Integer, ForeignKey('post.id'), nullable=False)
 
-    author = relationship('User', back_populates='comments')
-    post = relationship('Post', back_populates='comments')
+    author = relationship('User')
+    post = relationship('Post')
 
-
-   
 
 class Post(Base):
     __tablename__ = 'post'
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
 
+    
     user = relationship('User', back_populates='posts')
-    comments = relationship('Comment', back_populates='post')
-    media = relationship('Media', back_populates='post')
+    comments = relationship('Comment')
 
 
 class Media(Base):
@@ -57,7 +57,7 @@ class Media(Base):
     type = Column(Enum('image', 'video', 'audio', name='media_types'), nullable=False)
     post_id = Column(Integer, ForeignKey('post.id'), nullable=False)
 
-    post = relationship('Post', back_populates='media')
+    post = relationship('Post')
 
 
 def to_dict(self):
